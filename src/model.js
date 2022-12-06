@@ -9,9 +9,9 @@ export type Todo = {
 };
 
 export const newTodo = (description: string, id: number, app: App): any => {
-  const convertedDiscription = description.toLocaleLowerCase();
-  const value = app.todos.some((el) => el.description === convertedDiscription);
-  return value? '' : { description: convertedDiscription, completed: false, id };
+  const convertedDescription = description.toLocaleLowerCase();
+  const value = app.todos.some((el) => el.description === convertedDescription);
+  return value? '' : { description: convertedDescription, completed: false, id };
 };
 
 export type Filter = "/" | "/active" | "/completed";
