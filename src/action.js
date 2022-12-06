@@ -18,20 +18,23 @@ export const runAction = (app: App, action: Action): App => action(app);
 
 
 export const handleAdd = (e: As<InputEvent>): Action => {
-    const value = e.target.value.trim()
-    if (e.key !== ENTER_KEY || value.length === 0) {
-      return id
-    }
-    e.target.value = ''
-    return addTodo(value)
+  const value = e.target.value.trim()
+  if (e.key !== ENTER_KEY || value.length === 0) {
+    return id
   }
+  e.target.value = ''
+  return addTodo(value)
+}
 
 export const handleToggleAll = (e: As<InputEvent>): Action => updateAllCompleted(e.target.checked);
 
-export const handleComplete = ({ id }: Todo) => (e: As<InputEvent>): Action => updateCompleted(e.target.checked, id);
+export const handleComplete =
+  ({ id }: Todo): any =>
+  (e: As<InputEvent>): Action =>
+    updateCompleted(e.target.checked, id);
 
 export const handleRemove =
-  ({ id }: Todo) =>
+  ({ id }: Todo): any =>
   (e: As<ClickEvent>): Action =>
     removeTodo(id);
 

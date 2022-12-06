@@ -3,12 +3,16 @@
 export type Id = number;
 
 export type Todo = {
-  description: String,
-  completed: Boolean,
+  description: string,
+  completed: boolean,
   id: Id,
 };
 
-export const newTodo = (description: String, id: number): Todo => ({ description, completed: false, id });
+export const newTodo = (description: string, id: number, app: App): any => {
+  const convertedDiscription = description.toLocaleLowerCase();
+  const value = app.todos.some((el) => el.description === convertedDiscription);
+  return value? '' : { description: convertedDiscription, completed: false, id };
+};
 
 export type Filter = "/" | "/active" | "/completed";
 
@@ -26,36 +30,39 @@ export const emptyApp: App = {
   nextId: 0,
 };
 
-export const completedCount = ({ todos }: App): number =>
-  todos.reduce(countIfCompleted, 0)
+export const completedCount = ({ todos }: App): number => todos.reduce(countIfCompleted, 0);
 
-const countIfCompleted = (count, { completed }) => count + (completed ? 1 : 0);
+const countIfCompleted = (count: number,  todos: Todo) => count + (todos.completed ? 1 : 0);
 
+const getTodos = (app: App, description: string, id: number) => {
+  const newTodoValue = newTodo(description, id, app);
+  return  newTodoValue === ''? app.todos : app.todos.concat(newTodoValue)
+};
 
 export const addTodo =
-  (description: string) =>
+  (description: string):any =>
   (app: App): App => ({
     ...app,
     nextId: app.nextId + 1,
-    todos: app.todos.concat([newTodo(description, app.nextId)]),
+    todos: getTodos(app, description, app.nextId),
+    // todos: app.todos.concat([newTodo(description, app.nextId, app)]),
   });
 
 export const removeTodo =
-  (id: Id) =>
+  (id: Id):any =>
   (app: App): App => ({
     ...app,
     todos: app.todos.filter((todo) => todo.id !== id),
   });
 
-export const updateCompleted = (completed: Boolean, id: Id) => (app: App) => {
-  return (
-  ({
+export const updateCompleted = (completed: boolean, id: Id): any => (app: App) => {
+  return {
     ...app,
-    todos: app.todos.map(todo => todo.id === id ? { ...todo, completed } : todo),
-  })
-)};
+    todos: app.todos.map((todo) => (todo.id === id ? { ...todo, completed } : todo)),
+  };
+};
 
-export const updateAllCompleted = (completed: boolean) => (app: App) => ({
+export const updateAllCompleted = (completed: boolean):any => (app: App) => ({
   ...app,
   todos: app.todos.map((todo) => ({ ...todo, completed })),
 });
@@ -65,7 +72,7 @@ export const removeAllCompleted = (app: App): App => ({
   todos: app.todos.filter((todo) => !todo.completed),
 });
 export const setFilter =
-  (filter: Filter) =>
+  (filter: Filter): any =>
   (app: App): App => ({
     ...app,
     filter,

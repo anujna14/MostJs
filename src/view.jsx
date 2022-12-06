@@ -25,7 +25,7 @@ const filterTodos = ({ filter, todos }: App): Todo[] =>
     }
   });
 export const View =
-  (addAction: (Action) => void) =>
+  (addAction: (Action) => void):any =>
   (appState: App): React.Element<*> => {
     console.log("APP STATE",appState )
     const completed = completedCount(appState);
